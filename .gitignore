@@ -2,3 +2,4 @@
 CoinsTests/
 CoinsUITests/
 Coins.xcodeproj/
+Coins/Networking/APIKeys.swift
