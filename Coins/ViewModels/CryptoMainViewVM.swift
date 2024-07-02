@@ -13,12 +13,12 @@ extension CryptoMainView {
         @Published var isLoading: Bool = false
         @Published var topCoins: [Coin] = []
         
-        private var api = CGNetworkHandler()
+        private var gecko = Gecko()
         private var cancellables = Set<AnyCancellable>()
         
         func fetchTopCoins(limit: Int) {
             isLoading = true
-            api.fetchTopCoins(limit: limit) { [weak self] result in
+            gecko.fetchTopCoins(limit: limit) { [weak self] result in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let coins):

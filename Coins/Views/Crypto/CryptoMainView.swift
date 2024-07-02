@@ -26,16 +26,18 @@ struct CryptoMainView: View {
             if viewModel.isLoading {
                 ProgressView("Loading...")
             } else {
-                List {
+                ScrollView {
                     ForEach(searchResults, id: \.self) { coin in
-                        Text("\(coin.name)")
+                        HStack {
+                            CoinCard(viewModel: CoinCard.ViewModel(), coin: coin)
+                        }
                     }
                 }
                 .searchable(text: $searchRequest)
             }
         }
         .onAppear {
-            viewModel.fetchTopCoins(limit: 10)
+            viewModel.fetchTopCoins(limit: 50)
         }
     }
 }

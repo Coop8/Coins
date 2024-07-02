@@ -7,13 +7,22 @@
 
 import Foundation
 
-final class Coin: Decodable {
+final class Coin: Decodable, ObservableObject {
     let id: String
     let symbol: String
     let name: String
     let current_price: Double
     let price_change_24h: Double
     let price_change_percentage_24h: Double
+    
+    init() {
+        self.id = "bitcoin"
+        self.symbol = "btc"
+        self.name = "Bitcoin"
+        self.current_price = 61982.70
+        self.price_change_24h = -847.40
+        self.price_change_percentage_24h = -1.35
+    }
 }
 
 extension Coin {
@@ -21,7 +30,7 @@ extension Coin {
         let market_data: MarketData
         
         struct MarketData: Decodable {
-            let current_price: [String: Double]
+            let price_change_24h: Double
             let price_change_percentage_24h: Double
         }
     }
@@ -35,5 +44,11 @@ extension Coin: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
         hasher.combine(symbol)
+    }
+}
+
+extension Coin {
+    static var exampleCoin: Coin {
+        return .init()
     }
 }

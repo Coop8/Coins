@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class CGNetworkHandler {
+final class Gecko {
     private let baseURL = "https://api.coingecko.com/api/v3"
         
     enum APIError: Error {
@@ -16,7 +16,7 @@ final class CGNetworkHandler {
         case encodingProblem
     }
 
-    func fetchCoinData(for coinID: String, completion: @escaping (Result<Coin, APIError>) -> Void) {
+    func fetchCoinDetails(for coinID: String, completion: @escaping (Result<Coin.details, APIError>) -> Void) {
         let endpoint = "/coins/\(coinID)?localization=false&community_data=false&developer_data=false"
         guard let url = URL(string: baseURL + endpoint) else { return }
         
@@ -31,8 +31,8 @@ final class CGNetworkHandler {
             }
             
             do {
-                let coin = try JSONDecoder().decode(Coin.self, from: jsonData)
-                completion(.success(coin))
+                let coinDetails = try JSONDecoder().decode(Coin.details.self, from: jsonData)
+                completion(.success(coinDetails))
             } catch {
                 completion(.failure(.decodingProblem))
             }
