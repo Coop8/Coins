@@ -12,7 +12,7 @@ struct CoinsApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MainView(viewModel: MainView.ViewModel())
+            MainView()
         }
     }
 }

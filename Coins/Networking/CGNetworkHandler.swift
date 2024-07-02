@@ -39,4 +39,27 @@ final class CGNetworkHandler {
         }
         dataTask.resume()
     }
+    
+    func fetchTopCoins(limit: Int, completion: @escaping (Result<[Coin], APIError>) -> Void) {
+        let endpoint = "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=\(limit)&page=1"
+        guard let url = URL(string: baseURL + endpoint) else { return }
+        
+        var request = URLRequest(url: url)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let dataTask = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let jsonData = data else {
+                completion(.failure(.responseProblem))
+                return
+            }
+            
+            do {
+                let coins = try JSONDecoder().decode([Coin].self, from: jsonData)
+                completion(.success(coins))
+            } catch {
+                completion(.failure(.decodingProblem))
+            }
+        }
+        dataTask.resume()
+    }
 }
