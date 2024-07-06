@@ -14,7 +14,6 @@ extension CoinCard {
         @Published var dailyPriceChangePercentage: Double = 0.0
 
         private var gecko = Gecko()
-        private var cancellables = Set<AnyCancellable>()
 
         /// Fetch detailed coin data for a coin given the coinID
         func fetchCoinData(for coinID: String) {

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CoinCard: View {
-    @StateObject var viewModel: CoinCard.ViewModel
+    @StateObject private var viewModel: CoinCard.ViewModel = CoinCard.ViewModel()
     @State private var showDetails: Bool = false
     
     var coin: Coin
@@ -36,7 +36,6 @@ struct CoinCard: View {
         }
         .frame(maxWidth: .infinity, maxHeight: 75)
         .onTapGesture {
-            viewModel.fetchCoinData(for: coin.id)
             showDetails.toggle()
         }
         .fullScreenCover(isPresented: $showDetails) {
@@ -47,10 +46,13 @@ struct CoinCard: View {
                     .foregroundStyle(.accent)
             }
             Text("\(viewModel.dailyPriceChangePercentage, specifier: "%0.3f")")
+                .task {
+                    viewModel.fetchCoinData(for: coin.id)
+                }
         }
     }
 }
 
 #Preview {
-    CoinCard(viewModel: CoinCard.ViewModel(), coin: Coin())
+    CoinCard(coin: Coin())
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CryptoMainView: View {
-    @StateObject var viewModel: CryptoMainView.ViewModel
+    @StateObject private var viewModel: CryptoMainView.ViewModel = CryptoMainView.ViewModel()
     
     // View properties
     @State private var searchRequest: String = ""
@@ -29,19 +29,19 @@ struct CryptoMainView: View {
                 ScrollView {
                     ForEach(searchResults, id: \.self) { coin in
                         HStack {
-                            CoinCard(viewModel: CoinCard.ViewModel(), coin: coin)
+                            CoinCard(coin: coin)
                         }
                     }
                 }
                 .searchable(text: $searchRequest)
             }
         }
-        .onAppear {
-            viewModel.fetchTopCoins(limit: 50)
+        .task {
+            viewModel.fetchTopCoins(limit: 10)
         }
     }
 }
 
 #Preview {
-    CryptoMainView(viewModel: CryptoMainView.ViewModel())
+    CryptoMainView()
 }

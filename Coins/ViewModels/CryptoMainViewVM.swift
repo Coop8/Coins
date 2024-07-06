@@ -14,7 +14,6 @@ extension CryptoMainView {
         @Published var topCoins: [Coin] = []
         
         private var gecko = Gecko()
-        private var cancellables = Set<AnyCancellable>()
         
         func fetchTopCoins(limit: Int) {
             isLoading = true
