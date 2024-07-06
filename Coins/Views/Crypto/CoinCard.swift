@@ -16,6 +16,24 @@ struct CoinCard: View {
     var body: some View {
         HStack {
             HStack {
+                /// SwiftUI's AyncImage saves so much boilerplate
+                AsyncImage(url: URL(string: coin.image)) { phase in
+                    if let image = phase.image {
+                        image.resizable()
+                             .scaledToFit()
+                             .frame(width: 50, height: 50)
+                    } else if phase.error != nil {
+                        Image(systemName: "xmark.circle")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 50, height: 50)
+                    } else {
+                        ProgressView()
+                            .frame(width: 50, height: 50)
+                    }
+                }
+                .padding(.trailing, 10)
+                
                 Text(coin.name)
                     .font(.title2)
                     .bold()
