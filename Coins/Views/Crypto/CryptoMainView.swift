@@ -26,21 +26,34 @@ struct CryptoMainView: View {
             if viewModel.isLoading {
                 ProgressView("Loading...")
             } else {
-                // MARK: Favorites section
-                Text("Favorites")
-                    .font(.title)
-                    .bold()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                List {
-                    // MARK: Featured section
-                    Text("Featured")
+                ScrollView {
+                    // MARK: Favorites section
+                    Text("Favorites")
                         .font(.title)
                         .bold()
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    ForEach(searchResults, id: \.self) { coin in
-                        CoinCard(coin: coin)
+                    
+                    // MARK: Featured section
+                    VStack {
+                        Text("Featured")
+                            .font(.title)
+                            .bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        VStack {
+                            ForEach(viewModel.topCoins, id: \.self) { coin in
+                                CoinCard(coin: coin)
+                                /// Add a divider if the element is not last in the array
+                                if coin != viewModel.topCoins.last {
+                                    Divider()
+                                }
+                            }
+                        }
+                        .padding(10)
+                        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 8))
                     }
                 }
+                .padding(.horizontal)
             }
         }
         .task {

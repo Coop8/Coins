@@ -65,6 +65,20 @@ struct CoinCard: View {
                 Image(systemName: "xmark.circle.fill")
                     .foregroundStyle(.accent)
             }
+            HStack {
+                Button {
+                } label: {
+                    Text("Day")
+                }
+                Button {
+                } label: {
+                    Text("Month")
+                }
+                Button {
+                } label: {
+                    Text("Year")
+                }
+            }
             Text("\(viewModel.dailyPriceChangePercentage, specifier: "%0.3f")")
                 .task {
                     viewModel.fetchCoinData(for: coin.id)
