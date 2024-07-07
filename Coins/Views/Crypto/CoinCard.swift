@@ -21,36 +21,38 @@ struct CoinCard: View {
                     if let image = phase.image {
                         image.resizable()
                              .scaledToFit()
-                             .frame(width: 50, height: 50)
+                             .frame(width: 20, height: 20)
                     } else if phase.error != nil {
                         Image(systemName: "xmark.circle")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 50, height: 50)
+                            .frame(width: 20, height: 20)
                     } else {
                         ProgressView()
-                            .frame(width: 50, height: 50)
+                            .frame(width: 20, height: 20)
                     }
                 }
                 .padding(.trailing, 10)
-                
-                Text(coin.name)
-                    .font(.title2)
-                    .bold()
-                Text("(\(coin.symbol.uppercased()))")
-                    .opacity(0.6)
+
+                VStack {
+                    Text(coin.name)
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text("\(coin.symbol.uppercased())")
+                        .font(.subheadline)
+                        .opacity(0.6)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            
+            Spacer()
             
             VStack {
                 Text("$\(coin.current_price, specifier: "%0.2f")")
-                    .frame(maxWidth: .infinity, alignment: .trailing)
                 Text("\(coin.price_change_24h, specifier: "%0.2f") (\(coin.price_change_percentage_24h, specifier: "%0.3f")%)")
-                    .frame(maxWidth: .infinity, alignment: .trailing)
                     .font(.subheadline)
                     .foregroundStyle(coin.price_change_24h.isLess(than: 0) ? .red : .green)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
         }
         .frame(maxWidth: .infinity, maxHeight: 75)
         .onTapGesture {

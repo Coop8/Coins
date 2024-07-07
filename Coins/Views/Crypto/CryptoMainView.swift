@@ -26,14 +26,21 @@ struct CryptoMainView: View {
             if viewModel.isLoading {
                 ProgressView("Loading...")
             } else {
-                ScrollView {
+                // MARK: Favorites section
+                Text("Favorites")
+                    .font(.title)
+                    .bold()
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                List {
+                    // MARK: Featured section
+                    Text("Featured")
+                        .font(.title)
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     ForEach(searchResults, id: \.self) { coin in
-                        HStack {
-                            CoinCard(coin: coin)
-                        }
+                        CoinCard(coin: coin)
                     }
                 }
-                .searchable(text: $searchRequest)
             }
         }
         .task {
