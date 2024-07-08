@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct CryptoMainView: View {
-    @StateObject private var viewModel: CryptoMainView.ViewModel = CryptoMainView.ViewModel()
+struct CryptoView: View {
+    @StateObject private var viewModel: CryptoView.ViewModel = CryptoView.ViewModel()
     
     // View properties
     @State private var searchRequest: String = ""
@@ -29,15 +29,13 @@ struct CryptoMainView: View {
                 ScrollView {
                     // MARK: Favorites section
                     Text("Favorites")
-                        .font(.title)
-                        .bold()
+                        .font(Font.custom("MontserratRoman-Bold", size: 28))
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
                     // MARK: Featured section
                     VStack {
                         Text("Featured")
-                            .font(.title)
-                            .bold()
+                            .font(Font.custom("MontserratRoman-Bold", size: 28))
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
                         VStack {
@@ -54,14 +52,15 @@ struct CryptoMainView: View {
                     }
                 }
                 .padding(.horizontal)
+                .searchable(text: $searchRequest)
             }
         }
         .task {
-            viewModel.fetchTopCoins(limit: 10)
+            viewModel.fetchTopCoins(limit: 5)
         }
     }
 }
 
 #Preview {
-    CryptoMainView()
+    CryptoView()
 }

@@ -8,10 +8,11 @@
 import Foundation
 import Combine
 
-extension CryptoMainView {
+extension CryptoView {
     final class ViewModel: ObservableObject {
         @Published var isLoading: Bool = false
         @Published var topCoins: [Coin] = []
+        @Published var favoriteCoins: [Coin] = []
         
         private var gecko = Gecko()
         

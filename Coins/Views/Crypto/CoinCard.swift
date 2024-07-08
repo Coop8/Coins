@@ -41,10 +41,10 @@ struct CoinCard: View {
 
                 VStack {
                     Text(coin.name)
-                        .font(.headline)
+                        .font(Font.custom("MontserratRoman-Bold", size: 20))
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Text("\(coin.symbol.uppercased())")
-                        .font(.subheadline)
+                        .font(Font.custom("MontserratRoman-SemiBold", size: 18))
                         .opacity(0.6)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -54,8 +54,9 @@ struct CoinCard: View {
             
             VStack {
                 Text("$\(coin.current_price, specifier: "%0.2f")")
+                    .font(Font.custom("MontserratRoman-Medium", size: 16))
                 Text("\(coin.price_change_24h, specifier: "%0.2f") (\(coin.price_change_percentage_24h, specifier: "%0.3f")%)")
-                    .font(.subheadline)
+                    .font(Font.custom("MontserratRoman-Medium", size: 14))
                     .foregroundStyle(coin.price_change_24h.isLess(than: 0) ? .red : .green)
             }
         }

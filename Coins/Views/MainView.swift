@@ -12,7 +12,24 @@ struct MainView: View {
         NavigationStack {
             ZStack {
                 Color.themeBackground.ignoresSafeArea()
-                CryptoMainView()
+                TabView {
+                    CryptoView()
+                        .tabItem {
+                            Text("Crypto")
+                        }
+                    
+                    StocksView()
+                        .tabItem {
+                            Text("Stocks")
+                            Image(systemName: "chart.line.uptrend.xyaxis")
+                        }
+                    
+                    SettingsView()
+                        .tabItem {
+                            Text("Settings")
+                            Image(systemName: "slider.horizontal.3")
+                        }
+                }
             }
         }
     }
