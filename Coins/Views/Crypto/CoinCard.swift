@@ -23,10 +23,15 @@ struct CoinCard: View {
                              .scaledToFit()
                              .frame(width: 20, height: 20)
                     } else if phase.error != nil {
-                        Image(systemName: "xmark.circle")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 20, height: 20)
+                        VStack {
+                            Image(systemName: "xmark.circle")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                            Text("Couldn't Load Image")
+                                .font(.caption2)
+                                .multilineTextAlignment(.center)
+                        }
                     } else {
                         ProgressView()
                             .frame(width: 20, height: 20)
