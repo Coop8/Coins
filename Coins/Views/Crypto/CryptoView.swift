@@ -28,15 +28,34 @@ struct CryptoView: View {
             } else {
                 ScrollView {
                     // MARK: Favorites section
-                    Text("Favorites")
-                        .font(Font.custom("MontserratRoman-Bold", size: 28))
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                    VStack {
+                        Text("Favorites")
+                            .font(Font.custom("MontserratRoman-Bold", size: 28))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .foregroundStyle(.themeTertiary)
+                        
+                        if viewModel.favoriteCoins.isEmpty {
+                            Text("Favorite some coins to view them here!")
+                                .font(Font.custom("MontserratRoman-Regular", size: 20))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        } else {
+                            ForEach(viewModel.favoriteCoins, id: \.self) { coin in
+                                CoinCard(coin: coin)
+                                /// Add a divider if the element is not last in the array
+                                if coin != viewModel.favoriteCoins.last {
+                                    Divider()
+                                }
+                            }
+                        }
+                    }
+                    .padding(.bottom)
                     
                     // MARK: Featured section
                     VStack {
                         Text("Featured")
                             .font(Font.custom("MontserratRoman-Bold", size: 28))
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .foregroundStyle(.themeTertiary)
                         
                         VStack {
                             ForEach(viewModel.topCoins, id: \.self) { coin in

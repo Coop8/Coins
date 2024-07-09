@@ -28,6 +28,7 @@ struct CoinCard: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 20, height: 20)
+                            
                             Text("Couldn't Load Image")
                                 .font(.caption2)
                                 .multilineTextAlignment(.center)
@@ -43,6 +44,7 @@ struct CoinCard: View {
                     Text(coin.name)
                         .font(Font.custom("MontserratRoman-Bold", size: 20))
                         .frame(maxWidth: .infinity, alignment: .leading)
+                    
                     Text("\(coin.symbol.uppercased())")
                         .font(Font.custom("MontserratRoman-SemiBold", size: 18))
                         .opacity(0.6)
@@ -55,9 +57,16 @@ struct CoinCard: View {
             VStack {
                 Text("$\(coin.current_price, specifier: "%0.2f")")
                     .font(Font.custom("MontserratRoman-Medium", size: 16))
-                Text("\(coin.price_change_24h, specifier: "%0.2f") (\(coin.price_change_percentage_24h, specifier: "%0.3f")%)")
-                    .font(Font.custom("MontserratRoman-Medium", size: 14))
-                    .foregroundStyle(coin.price_change_24h.isLess(than: 0) ? .red : .green)
+                
+                HStack(spacing: 2) {
+                    Text(coin.price_change_24h.isLess(than: 0) ? "-" : "+")
+                        .font(Font.custom("MontserratRoman-Medium", size: 14))
+
+                    Text("\(coin.price_change_24h.magnitude, specifier: "%0.2f")")
+                        .font(Font.custom("MontserratRoman-Medium", size: 14))
+                }                        
+                .foregroundStyle(coin.price_change_24h.isLess(than: 0) ? .red : .green)
+
             }
         }
         .frame(maxWidth: .infinity, maxHeight: 75)
@@ -76,10 +85,12 @@ struct CoinCard: View {
                 } label: {
                     Text("Day")
                 }
+                
                 Button {
                 } label: {
                     Text("Month")
                 }
+                
                 Button {
                 } label: {
                     Text("Year")
