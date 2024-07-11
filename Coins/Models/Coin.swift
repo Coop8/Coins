@@ -27,13 +27,15 @@ final class Coin: Decodable, ObservableObject {
     }
 }
 
+/// Separate extension to split up API requests
 extension Coin {
     class details: Decodable {
         let market_data: MarketData
         
         struct MarketData: Decodable {
-            let price_change_24h: Double
-            let price_change_percentage_24h: Double
+            let prices: [[Double]]
+            let market_caps: [[Double]]
+            let total_volumes: [[Double]]
         }
     }
 }

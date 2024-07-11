@@ -78,29 +78,55 @@ struct CoinCard: View {
                 showDetails.toggle()
             } label: {
                 Image(systemName: "xmark.circle.fill")
-                    .foregroundStyle(.accent)
             }
-            HStack {
-                Button {
-                } label: {
-                    Text("Day")
-                }
-                
-                Button {
-                } label: {
-                    Text("Month")
-                }
-                
-                Button {
-                } label: {
-                    Text("Year")
+            .task {
+                viewModel.fetchHistoricalData(for: coin.id, timeRange: .twentyFourHours)
+            }
+
+//            HStack {
+//                Button {
+//                } label: {
+//                    Text("Day")
+//                }
+//                
+//                Button {
+//                } label: {
+//                    Text("Month")
+//                }
+//                
+//                Button {
+//                } label: {
+//                    Text("Year")
+//                }
+//            }
+            
+            if let marketData = viewModel.marketData {
+                ScrollView {
+                    ForEach(marketData.prices, id: \.self) { price in
+                        HStack {
+                            Text("Timestamp: \(Date(unixTimestamp: price[0]), formatter: DateFormatter.customFormatter)")
+                            Spacer()
+                            Text("Price: \(price[1], specifier: "%.2f")")
+                        }
+                    }
                 }
             }
-            Text("\(viewModel.dailyPriceChangePercentage, specifier: "%0.3f")")
-                .task {
-                    viewModel.fetchCoinData(for: coin.id)
-                }
         }
+    }
+}
+
+extension DateFormatter {
+    static let customFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter
+    }()
+}
+
+extension Date {
+    init(unixTimestamp: Double) {
+        self.init(timeIntervalSince1970: unixTimestamp / 1000.0)
     }
 }
 
