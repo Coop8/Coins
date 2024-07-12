@@ -49,7 +49,11 @@ final class Gecko {
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.timeoutInterval = 10
+        request.allHTTPHeaderFields = [
+            "accept": "application/json",
+            "x-cg-demo-api-key": APIKeys.coinGeckoAPIKey
+        ]
         
         /// Perform the request
         let dataTask = URLSession.shared.dataTask(with: request) { data, response, error in
