@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CryptoView: View {
-    @StateObject private var viewModel: CryptoView.ViewModel = CryptoView.ViewModel()
+    @StateObject private var viewModel: CryptoView.ViewModel
     
     // View properties
     @State private var searchRequest: String = ""
@@ -19,6 +19,14 @@ struct CryptoView: View {
         } else {
             return viewModel.topCoins.filter { $0.name.contains(searchRequest) }
         }
+    }
+    
+    private let geckoService: GeckoService
+    
+    /// Init
+    init(geckoService: GeckoService) {
+        self.geckoService = geckoService
+        _viewModel = StateObject(wrappedValue: CryptoView.ViewModel(geckoService: geckoService))
     }
     
     var body: some View {
@@ -40,7 +48,7 @@ struct CryptoView: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         } else {
                             ForEach(viewModel.favoriteCoins, id: \.self) { coin in
-                                CoinCard(coin: coin)
+                                CoinCard(coin: coin, geckoService: geckoService)
                                 /// Add a divider if the element is not last in the array
                                 if coin != viewModel.favoriteCoins.last {
                                     Divider()
@@ -59,7 +67,7 @@ struct CryptoView: View {
                         
                         VStack {
                             ForEach(viewModel.topCoins, id: \.self) { coin in
-                                CoinCard(coin: coin)
+                                CoinCard(coin: coin, geckoService: geckoService)
                                 /// Add a divider if the element is not last in the array
                                 if coin != viewModel.topCoins.last {
                                     Divider()
@@ -81,5 +89,5 @@ struct CryptoView: View {
 }
 
 #Preview {
-    CryptoView()
+    CryptoView(geckoService: Gecko())
 }

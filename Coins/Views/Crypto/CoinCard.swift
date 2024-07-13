@@ -8,10 +8,17 @@
 import SwiftUI
 
 struct CoinCard: View {
-    @StateObject private var viewModel: CoinCard.ViewModel = CoinCard.ViewModel()
+    @StateObject private var viewModel: CoinCard.ViewModel
     @State private var showDetails: Bool = false
     
     var coin: Coin
+    private let geckoService: GeckoService
+    
+    init(coin: Coin, geckoService: GeckoService) {
+        self.coin = coin
+        self.geckoService = geckoService
+        _viewModel = StateObject(wrappedValue: CoinCard.ViewModel(geckoService: geckoService))
+    }
     
     var body: some View {
         HStack {
@@ -79,5 +86,5 @@ struct CoinCard: View {
 }
 
 #Preview {
-    CoinCard(coin: Coin())
+    CoinCard(coin: Coin(), geckoService: Gecko())
 }

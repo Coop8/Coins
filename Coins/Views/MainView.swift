@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct MainView: View {
+    private let gecko: GeckoService = Gecko()
+    
     var body: some View {
         NavigationStack {
             TabView {
-                CryptoView()
+                CryptoView(geckoService: gecko)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(.themeBackground)
                     .tabItem {

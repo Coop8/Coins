@@ -23,12 +23,17 @@ extension CoinCard {
         }
         @Published var priceDomain: (min: Double, max: Double)?
         
-        private var gecko = Gecko()
+        private var geckoService: GeckoService
+        
+        /// Init
+        init(geckoService: GeckoService = Gecko()) {
+            self.geckoService = geckoService
+        }
         
         /// Fetch the chart market data
         func fetchHistoricalData(for coinID: String, timeRange: TimeRange) {
             let dateRange = timeRange.dateRange
-            gecko.fetchHistoricalData(for: coinID, from: dateRange.start, to: dateRange.end) { [weak self] result in
+            geckoService.fetchHistoricalData(for: coinID, from: dateRange.start, to: dateRange.end) { [weak self] result in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let marketData):

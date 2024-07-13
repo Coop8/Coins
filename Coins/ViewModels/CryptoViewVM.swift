@@ -14,11 +14,16 @@ extension CryptoView {
         @Published var topCoins: [Coin] = []
         @Published var favoriteCoins: [Coin] = []
         
-        private var gecko = Gecko()
+        private var geckoService: GeckoService
+        
+        /// Init
+        init(geckoService: GeckoService = Gecko()) {
+            self.geckoService = geckoService
+        }
         
         func fetchTopCoins(limit: Int) {
             isLoading = true
-            gecko.fetchTopCoins(limit: limit) { [weak self] result in
+            geckoService.fetchTopCoins(limit: limit) { [weak self] result in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let coins):
