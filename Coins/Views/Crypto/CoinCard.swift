@@ -80,7 +80,7 @@ struct CoinCard: View {
             viewModel.fetchHistoricalData(for: coin.id, timeRange: .oneHour)
         }
         .fullScreenCover(isPresented: $showDetails) {
-            CardDetails(viewModel: viewModel, showDetails: $showDetails)
+            CardDetails(viewModel: viewModel, showDetails: $showDetails, coinID: coin.id)
         }
     }
 }
