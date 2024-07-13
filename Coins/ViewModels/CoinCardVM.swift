@@ -11,18 +11,19 @@ import Combine
 extension CoinCard {
     final class ViewModel: ObservableObject {
         @Published var isLoading: Bool = false
-        @Published var marketData: Coin.details.MarketData?
+        @Published var marketData: Coin.details.MarketData? {
+            didSet {
+                priceDomain = calculatePriceDomain()
+            }
+        }
         @Published var selectedTimeRange: TimeRange = .oneHour {
             didSet {
                 fetchHistoricalData(for: "bitcoin", timeRange: selectedTimeRange)
             }
         }
-
-        private var gecko = Gecko()
+        @Published var priceDomain: (min: Double, max: Double)?
         
-        init() {
-            fetchHistoricalData(for: "bitcoin", timeRange: .oneHour)
-        }
+        private var gecko = Gecko()
         
         /// Fetch the chart market data
         func fetchHistoricalData(for coinID: String, timeRange: TimeRange) {
@@ -37,6 +38,18 @@ extension CoinCard {
                     }
                 }
             }
+        }
+        
+        /// Calculate the domain of the prices
+        func calculatePriceDomain() -> (min: Double, max: Double)? {
+            guard let prices = marketData?.prices else { return nil }
+            
+            let priceDomain = prices.map { $0[1] }
+            
+            guard let minPrice = priceDomain.min(),
+                  let maxPrice = priceDomain.max() else { return nil }
+            
+            return (min: minPrice, max: maxPrice)
         }
     }
 }
