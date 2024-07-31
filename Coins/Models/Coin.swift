@@ -21,7 +21,7 @@ final class Coin: Decodable, ObservableObject {
         self.symbol = "btc"
         self.name = "Bitcoin"
         self.image = "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400"
-        self.current_price = 61982.70
+        self.current_price = 66374.32
         self.price_change_24h = -847.40
         self.price_change_percentage_24h = -1.35
     }

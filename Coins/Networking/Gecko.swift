@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class Gecko {
+final class Gecko: GeckoService {
     private let baseURL = "https://api.coingecko.com/api/v3"
     
     /// Custom errors for API operations

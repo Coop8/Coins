@@ -77,7 +77,7 @@ struct CoinCard: View {
         .frame(maxWidth: .infinity, maxHeight: 75)
         .onTapGesture {
             showDetails.toggle()
-            viewModel.fetchHistoricalData(for: coin.id, timeRange: .oneHour)
+            
         }
         .fullScreenCover(isPresented: $showDetails) {
             CardDetails(viewModel: viewModel, showDetails: $showDetails, coinID: coin.id)
@@ -86,5 +86,5 @@ struct CoinCard: View {
 }
 
 #Preview {
-    CoinCard(coin: Coin(), geckoService: Gecko())
+    CoinCard(coin: Coin(), geckoService: MockGeckoService())
 }

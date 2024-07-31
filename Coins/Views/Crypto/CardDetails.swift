@@ -18,6 +18,7 @@ struct CardDetails: View {
         self.coinID = coinID
         self._showDetails = showDetails
         self.viewModel = viewModel
+        viewModel.fetchHistoricalData(for: coinID, timeRange: .oneHour)
     }
     
     var body: some View {
@@ -71,5 +72,5 @@ extension Date {
 }
 
 #Preview {
-    CardDetails(viewModel: CoinCard.ViewModel(), showDetails: .constant(true), coinID: "bitcoin")
+    CardDetails(viewModel: CoinCard.ViewModel(geckoService: MockGeckoService()), showDetails: .constant(true), coinID: "bitcoin")
 }

@@ -10,7 +10,7 @@ import SwiftUI
 struct CryptoView: View {
     @StateObject private var viewModel: CryptoView.ViewModel
     
-    // View properties
+    /// View properties
     @State private var searchRequest: String = ""
     
     private var searchResults: [Coin] {
@@ -89,5 +89,5 @@ struct CryptoView: View {
 }
 
 #Preview {
-    CryptoView(geckoService: Gecko())
+    CryptoView(geckoService: MockGeckoService())
 }
