@@ -32,6 +32,7 @@ extension CoinCard {
         
         /// Fetch the chart market data
         func fetchHistoricalData(for coinID: String, timeRange: TimeRange) {
+            isLoading = true
             let dateRange = timeRange.dateRange
             geckoService.fetchHistoricalData(for: coinID, from: dateRange.start, to: dateRange.end) { [weak self] result in
                 DispatchQueue.main.async {
@@ -41,6 +42,7 @@ extension CoinCard {
                     case .failure(let error):
                         print("Error fetching market data: \(error)")
                     }
+                    self?.isLoading = false
                 }
             }
         }
