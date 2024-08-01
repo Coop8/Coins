@@ -1,5 +1,5 @@
 //
-//  CGNetworkHandler.swift
+//  Gecko.swift
 //  Coins
 //
 //  Created by Cooper Rockwell on 7/1/24.

@@ -10,6 +10,10 @@ import Foundation
 final class MockGeckoService: GeckoService {
     func fetchTopCoins(limit: Int, completion: @escaping (Result<[Coin], Gecko.APIError>) -> Void) {
         let mockCoins = [
+            Coin.exampleCoin,
+            Coin.exampleCoin,
+            Coin.exampleCoin,
+            Coin.exampleCoin,
             Coin.exampleCoin
         ]
         completion(.success(mockCoins))
