@@ -9,19 +9,22 @@ import SwiftUI
 import Charts
 
 struct CardDetails: View {
-    @ObservedObject var viewModel: CoinCard.ViewModel
-    @Binding var showDetails: Bool
+    /// View properties
+    @ObservedObject var viewModel: CoinCard.ViewModel /// ViewModel
+    @Binding var showDetails: Bool /// Bool to control visibility of the details
     
-    let coinID: String
-    
+    let coinID: String /// ID of the coin being displayed
+
+    /// Init
     init(viewModel: CoinCard.ViewModel, showDetails: Binding<Bool>, coinID: String) {
         self.coinID = coinID
         self._showDetails = showDetails
         self.viewModel = viewModel
     }
-    
+
     var body: some View {
         ZStack {
+            /// While loading show ProgressView
             if viewModel.isLoading {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle())
@@ -30,6 +33,7 @@ struct CardDetails: View {
                     .edgesIgnoringSafeArea(.all)
             } else {
                 VStack {
+                    /// Button to close details
                     Button {
                         showDetails.toggle()
                     } label: {
@@ -38,14 +42,23 @@ struct CardDetails: View {
                             .frame(width: 50, height: 50)
                             .foregroundStyle(.white.opacity(0.2))
                     }
-                    
-                    if let marketData = viewModel.marketData {
+
+                    /// Time range buttons
+                    HStack {
+                        Button("1H") { viewModel.selectedTimeRange = .oneHour }
+                        Button("24H") { viewModel.selectedTimeRange = .twentyFourHours }
+                        Button("1M") { viewModel.selectedTimeRange = .oneMonth }
+                        Button("1Y") { viewModel.selectedTimeRange = .oneYear }
+                    }
+
+                    /// Display market data in chart if possible
+                    if let marketData = viewModel.marketData[viewModel.selectedTimeRange] {
                         VStack {
                             Chart {
                                 ForEach(marketData.prices, id: \.self) { point in
                                     let date = Date(unixTimestamp: point[0])
                                     let price = point[1]
-                                    
+
                                     LineMark(
                                         x: .value("Time", date, unit: .minute),
                                         y: .value("Price", price)
@@ -53,7 +66,7 @@ struct CardDetails: View {
                                     .interpolationMethod(.monotone)
                                     .foregroundStyle(.themeSecondary)
                                     .lineStyle(StrokeStyle(lineWidth: 3))
-                                    
+
                                     AreaMark(
                                         x: .value("Time", date, unit: .minute),
                                         y: .value("Price", price)
@@ -65,7 +78,7 @@ struct CardDetails: View {
                             .chartYScale(domain: viewModel.priceDomain!.min...viewModel.priceDomain!.max)
                             .frame(height: 300)
                             .padding()
-                            .clipped() // Ensure no clipping issues
+                            .clipped() /// Ensure no clipping issues
                         }
                         .frame(maxWidth: .infinity, maxHeight: 500)
                         .background(.ultraThinMaterial)
@@ -73,18 +86,9 @@ struct CardDetails: View {
                 }
             }
         }
-        .onAppear {
-            viewModel.fetchHistoricalData(for: coinID, timeRange: .oneHour)
-        }
-    }
-}
-
-extension Date {
-    init(unixTimestamp: Double) {
-        self.init(timeIntervalSince1970: unixTimestamp / 1000.0)
     }
 }
 
 #Preview {
-    CardDetails(viewModel: CoinCard.ViewModel(geckoService: MockGeckoService()), showDetails: .constant(true), coinID: "bitcoin")
+    CardDetails(viewModel: CoinCard.ViewModel(geckoService: MockGeckoService(), coinID: "bitcoin"), showDetails: .constant(true), coinID: "bitcoin")
 }

@@ -11,52 +11,55 @@ import Combine
 extension CoinCard {
     final class ViewModel: ObservableObject {
         @Published var isLoading: Bool = false
-        @Published var marketData: Coin.details.MarketData? {
-            didSet {
-                priceDomain = calculatePriceDomain()
-            }
-        }
+        @Published var marketData: [TimeRange: Coin.details.MarketData] = [:]
         @Published var selectedTimeRange: TimeRange = .oneHour {
             didSet {
-                fetchHistoricalData(for: "bitcoin", timeRange: selectedTimeRange)
+                if marketData[selectedTimeRange] == nil {
+                    fetchHistoricalData(for: coinID, timeRange: selectedTimeRange)
+                } else {
+                    updatePriceDomain()
+                }
             }
         }
         @Published var priceDomain: (min: Double, max: Double)?
-        
+
         private var geckoService: GeckoService
-        
+        private var coinID: String
+
         /// Init
-        init(geckoService: GeckoService = Gecko()) {
+        init(geckoService: GeckoService = Gecko(), coinID: String) {
             self.geckoService = geckoService
+            self.coinID = coinID
+            fetchHistoricalData(for: coinID, timeRange: .oneHour) // Initial data load
         }
-        
+
         /// Fetch the chart market data
         func fetchHistoricalData(for coinID: String, timeRange: TimeRange) {
             isLoading = true
             let dateRange = timeRange.dateRange
             geckoService.fetchHistoricalData(for: coinID, from: dateRange.start, to: dateRange.end) { [weak self] result in
                 DispatchQueue.main.async {
+                    self?.isLoading = false
                     switch result {
                     case .success(let marketData):
-                        self?.marketData = marketData
+                        self?.marketData[timeRange] = marketData
+                        self?.updatePriceDomain()
                     case .failure(let error):
                         print("Error fetching market data: \(error)")
                     }
-                    self?.isLoading = false
                 }
             }
         }
-        
+
         /// Calculate the domain of the prices
-        func calculatePriceDomain() -> (min: Double, max: Double)? {
-            guard let prices = marketData?.prices else { return nil }
-            
-            let priceDomain = prices.map { $0[1] }
-            
-            guard let minPrice = priceDomain.min(),
-                  let maxPrice = priceDomain.max() else { return nil }
-            
-            return (min: minPrice, max: maxPrice)
+        func updatePriceDomain() {
+            guard let data = marketData[selectedTimeRange] else { return }
+            let prices = data.prices.map { $0[1] }
+            if let minPrice = prices.min(), let maxPrice = prices.max() {
+                self.priceDomain = (min: minPrice, max: maxPrice)
+            } else {
+                self.priceDomain = nil
+            }
         }
     }
 }

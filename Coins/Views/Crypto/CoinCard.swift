@@ -8,42 +8,46 @@
 import SwiftUI
 
 struct CoinCard: View {
-    @StateObject private var viewModel: CoinCard.ViewModel
-    @State private var showDetails: Bool = false
+    /// View properties
+    @StateObject private var viewModel: CoinCard.ViewModel /// ViewModel
+    @State private var showDetails: Bool = false /// Bool to control the visibility of the details
     
-    var coin: Coin
-    private let geckoService: GeckoService
+    var coin: Coin /// The coin to be displayed
+    private let geckoService: GeckoService /// Service to fetch additional data as needed
     
+    /// Init
     init(coin: Coin, geckoService: GeckoService) {
         self.coin = coin
         self.geckoService = geckoService
-        _viewModel = StateObject(wrappedValue: CoinCard.ViewModel(geckoService: geckoService))
+        _viewModel = StateObject(wrappedValue: CoinCard.ViewModel(geckoService: geckoService, coinID: coin.id))
     }
     
     var body: some View {
         HStack {
             /// SwiftUI's AyncImage saves so much boilerplate
             AsyncImage(url: URL(string: coin.image)) { phase in
-                if let image = phase.image {
+                if let image = phase.image { /// if image loaded successfully
                     image.resizable()
                          .scaledToFit()
                          .frame(width: 20, height: 20)
-                } else if phase.error != nil {
+                } else if phase.error != nil { /// couldn't load image
                     VStack {
                         Image(systemName: "xmark.circle")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 20, height: 20)
+                            .frame(width: 15, height: 15)
+                            .foregroundStyle(.red)
                         
-                        Text("Couldn't Load Image")
+                        Text("Couldn't Load \nImage")
                             .font(.caption2)
                             .multilineTextAlignment(.center)
                     }
-                } else {
+                } else { /// while loading show ProgressView
                     ProgressView()
                         .frame(width: 20, height: 20)
                 }
             }
+            .padding(.leading, 5)
             .padding(.trailing, 10)
 
             VStack {
@@ -60,9 +64,11 @@ struct CoinCard: View {
             Spacer()
             
             VStack(alignment: .trailing) {
+                /// Coin current price
                 Text("$\(coin.current_price, specifier: "%0.2f")")
                     .font(Font.custom("MontserratRoman-Medium", size: 16))
                 
+                /// Coin price change percentage
                 HStack(spacing: 2) {
                     Text(coin.price_change_percentage_24h.isLess(than: 0) ? "-" : "+")
                         .font(Font.custom("MontserratRoman-Medium", size: 14))
