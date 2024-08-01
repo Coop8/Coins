@@ -61,6 +61,7 @@ struct CryptoView: View {
                         VStack {
                             if viewModel.topCoins.isEmpty {
                                 Text("No featured coins available. Check your network.")
+                                    .multilineTextAlignment(.center)
                             } else {
                                 ForEach(viewModel.topCoins, id: \.self) { coin in
                                     CoinCard(coin: coin, geckoService: geckoService)
@@ -75,6 +76,7 @@ struct CryptoView: View {
                         .padding(10)
                         .background(.themePrimary, in: .rect(cornerRadius: 10))
                     }
+                    .frame(maxWidth: .infinity)
                 }
                 .padding(.horizontal)
             }

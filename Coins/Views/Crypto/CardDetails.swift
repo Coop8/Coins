@@ -24,6 +24,8 @@ struct CardDetails: View {
 
     var body: some View {
         ZStack {
+            Color.themeBackground.ignoresSafeArea() /// Background color
+            
             /// While loading show ProgressView
             if viewModel.isLoading {
                 ProgressView()
@@ -39,8 +41,8 @@ struct CardDetails: View {
                     } label: {
                         Image(systemName: "xmark.circle.fill")
                             .resizable()
-                            .frame(width: 50, height: 50)
-                            .foregroundStyle(.white.opacity(0.2))
+                            .frame(width: 30, height: 30)
+                            .foregroundStyle(.themeSecondary.opacity(0.4))
                     }
 
                     /// Time range buttons
