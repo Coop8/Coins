@@ -1,5 +1,5 @@
 //
-//  CryptoMainView.swift
+//  CryptoView.swift
 //  Coins
 //
 //  Created by Cooper Rockwell on 7/1/24.
@@ -8,20 +8,9 @@
 import SwiftUI
 
 struct CryptoView: View {
-    @StateObject private var viewModel: CryptoView.ViewModel
-    
     /// View properties
-    @State private var searchRequest: String = ""
-    
-    private var searchResults: [Coin] {
-        if searchRequest.isEmpty {
-            return viewModel.topCoins
-        } else {
-            return viewModel.topCoins.filter { $0.name.contains(searchRequest) }
-        }
-    }
-    
-    private let geckoService: GeckoService
+    @StateObject private var viewModel: CryptoView.ViewModel /// ViewModel
+    private let geckoService: GeckoService /// Service to fetch additional data as needed
     
     /// Init
     init(geckoService: GeckoService) {
@@ -30,7 +19,9 @@ struct CryptoView: View {
     }
     
     var body: some View {
-        NavigationStack {
+        ZStack {
+            Color.themeBackground.ignoresSafeArea() /// Background color
+            
             if viewModel.isLoading {
                 ProgressView("Loading...")
             } else {
@@ -38,9 +29,10 @@ struct CryptoView: View {
                     // MARK: Favorites section
                     VStack {
                         Text("Favorites")
-                            .font(Font.custom("MontserratRoman-Bold", size: 28))
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .bold()
+                            .font(.title)
                             .foregroundStyle(.themeTertiary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         
                         if viewModel.favoriteCoins.isEmpty {
                             Text("Favorite some coins to view them here!")
@@ -49,6 +41,7 @@ struct CryptoView: View {
                         } else {
                             ForEach(viewModel.favoriteCoins, id: \.self) { coin in
                                 CoinCard(coin: coin, geckoService: geckoService)
+                                
                                 /// Add a divider if the element is not last in the array
                                 if coin != viewModel.favoriteCoins.last {
                                     Divider()
@@ -56,30 +49,34 @@ struct CryptoView: View {
                             }
                         }
                     }
-                    .padding(.bottom)
                     
                     // MARK: Featured section
                     VStack {
                         Text("Featured")
-                            .font(Font.custom("MontserratRoman-Bold", size: 28))
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .bold()
+                            .font(.title)
                             .foregroundStyle(.themeTertiary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         
                         VStack {
-                            ForEach(viewModel.topCoins, id: \.self) { coin in
-                                CoinCard(coin: coin, geckoService: geckoService)
-                                /// Add a divider if the element is not last in the array
-                                if coin != viewModel.topCoins.last {
-                                    Divider()
+                            if viewModel.topCoins.isEmpty {
+                                Text("No featured coins available. Check your network.")
+                            } else {
+                                ForEach(viewModel.topCoins, id: \.self) { coin in
+                                    CoinCard(coin: coin, geckoService: geckoService)
+                                    
+                                    /// Add a divider if the element is not last in the array
+                                    if coin != viewModel.topCoins.last {
+                                        Divider()
+                                    }
                                 }
                             }
                         }
                         .padding(10)
-                        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 8))
+                        .background(.themePrimary, in: .rect(cornerRadius: 10))
                     }
                 }
                 .padding(.horizontal)
-                .searchable(text: $searchRequest)
             }
         }
         .task {

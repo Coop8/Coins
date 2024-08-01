@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  MainView.swift
 //  Coins
 //
 //  Created by Cooper Rockwell on 7/1/24.
@@ -11,11 +11,10 @@ struct MainView: View {
     private let gecko: GeckoService = Gecko()
     
     var body: some View {
-        NavigationStack {
+        ZStack {
             TabView {
                 CryptoView(geckoService: gecko)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(.themeBackground)
                     .tabItem {
                         Text("Crypto")
                         Image(systemName: "coloncurrencysign.circle.fill")
@@ -23,7 +22,6 @@ struct MainView: View {
                 
                 StocksView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(.themeBackground)
                     .tabItem {
                         Text("Stocks")
                         Image(systemName: "chart.line.uptrend.xyaxis")
@@ -31,7 +29,6 @@ struct MainView: View {
                 
                 SettingsView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(.themeBackground)
                     .tabItem {
                         Text("Settings")
                         Image(systemName: "slider.horizontal.3")
